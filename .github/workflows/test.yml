@@ -22,7 +22,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Set up Go 
-      uses: actions/setup-go@v2.1.3
+      uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
       with:
         go-version: 1.15
     - name: Run coverage
