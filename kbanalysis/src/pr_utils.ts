@@ -15,7 +15,7 @@ function terminal(cmd:string){
     })  
 }
 
-export async function createActionYaml(owner:string, repo:string, content:string){
+export function createActionYaml(owner:string, repo:string, content:string){
     let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
     terminal(`mkdir -p ${path}`)
     terminal(`touch ${path}/action-security.yml`)
