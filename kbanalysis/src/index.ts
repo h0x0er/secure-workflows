@@ -3,7 +3,7 @@ import * as github from "@actions/github"
 import { existsSync, fstat, readFileSync } from "fs";
 import { exit } from "process";
 import { handleKBIssue } from "./issues-util";
-import { createPR } from "./pr_utils";
+import { createActionYaml } from "./pr_utils";
 import { isKBIssue, getAction, getActionYaml, findToken, printArray, comment, getRunsON, getReadme, checkDependencies, findEndpoints, permsToString, isValidLang, actionSecurity, getTokenInput, normalizePerms, isPaused} from "./utils"
 
 try{
@@ -14,10 +14,28 @@ try{
 
     const repos = github.context.repo // context repo
     const event = github.context.eventName
+    
 
+    if(event === "workflow_dispatch"){
+        let owner = core.getInput("owner");
+        let repo = core.getInput("repo");
 
+        if(owner !== "" && repo !== ""){
+            if(existsSync(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)){
+                core.info(`[!] KB already exists for ${owner}/${repo}`);
+                exit(0);
+            }
+            let content = [];
+            content.push(`# Add permissions for ${owner}/${repo}`);
+            content.push(`# Info: Checkout the analysis comment to see info.`);
+            createActionYaml(owner, repo, content.join("\n"));
+            core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
+            exit(0);
 
-    if(event === "workflow_dispatch" || event === "schedule"){
+        }
+    }
+
+    if(event === "schedule"){
         core.info(`[!] Launched by ${event}`)
         
         const label = "knowledge-base";
@@ -165,8 +183,8 @@ try{
             // no github_token pattern found in action_file & readme file 
             core.warning("Action doesn't contains reference to github_token")
             const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`
-            const pr_content = `${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n`
-            await createPR(pr_content, `knowledge-base/actions/${target_owner}/${target_repo}`)
+            const action_yaml_content = `${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n`
+            await createActionYaml(target_owner, target_repo, action_yaml_content)
 
             await comment(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n"+template)
         }else{
