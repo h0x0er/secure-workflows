@@ -64,9 +64,7 @@ try{
     }
 
     const issue_id = core.getInput("issue-id");
-    
-    
-    const resp = await client.rest.issues.get({issue_number: Number(issue_id ), owner: repos.owner, repo:repos.repo}) // target issue
+    const resp = await client.rest.pulls.get({pull_number: Number(issue_id ), owner: repos.owner, repo:repos.repo}) // target issue
 
     const title = resp.data.title // extracting title of the issue.
 

@@ -8371,7 +8371,7 @@ try {
         (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
     }
     const issue_id = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("issue-id");
-    const resp = await client.rest.issues.get({ issue_number: Number(issue_id), owner: repos.owner, repo: repos.repo }); // target issue
+    const resp = await client.rest.pulls.get({ pull_number: Number(issue_id), owner: repos.owner, repo: repos.repo }); // target issue
     const title = resp.data.title; // extracting title of the issue.
     if (!(0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .isKBIssue */ .yx)(title)) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is not a valid KB issue");
