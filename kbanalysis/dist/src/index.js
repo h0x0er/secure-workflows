@@ -8675,9 +8675,12 @@ function terminal(cmd) {
     });
 }
 function createActionYaml(owner, repo, content) {
-    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
-    terminal(`mkdir -p ${path}`);
-    terminal(`touch ${path}/action-security.yml`);
+    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}`;
+    let repo_file = `${repo.toLocaleLowerCase()}/action-security.yml`;
+    if (!(0,external_fs_.existsSync)(path)) {
+        terminal(`mkdir -p ${path}`);
+    }
+    terminal(`touch ${path}/${repo_file}`);
     terminal(`ls ${path}`);
     (0,external_fs_.writeFileSync)(`${path}/action-security.yml`, content);
 }

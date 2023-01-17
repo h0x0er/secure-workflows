@@ -1,6 +1,6 @@
 import {exec } from "child_process";
 import * as core from "@actions/core";
-import { writeFile, writeFileSync } from "fs";
+import { existsSync,writeFileSync } from "fs";
 
 
 
@@ -16,9 +16,12 @@ function terminal(cmd:string){
 }
 
 export function createActionYaml(owner:string, repo:string, content:string){
-    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
-    terminal(`mkdir -p ${path}`)
-    terminal(`touch ${path}/action-security.yml`)
+    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}`
+    let repo_file = `${repo.toLocaleLowerCase()}/action-security.yml`
+    if(!existsSync(path)){
+        terminal(`mkdir -p ${path}`)
+    }
+    terminal(`touch ${path}/${repo_file}`)
     terminal(`ls ${path}`)
     writeFileSync(`${path}/action-security.yml`, content);
 }
