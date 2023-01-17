@@ -1,6 +1,6 @@
 import {exec } from "child_process";
 import * as core from "@actions/core";
-import { writeFile } from "fs";
+import { writeFile, writeFileSync } from "fs";
 
 
 
@@ -20,10 +20,5 @@ export function createActionYaml(owner:string, repo:string, content:string){
     terminal(`mkdir -p ${path}`)
     terminal(`touch ${path}/action-security.yml`)
     terminal(`ls ${path}`)
-    writeFile(`${path}/action-security.yml`, content, (err)=>{
-        if(err){
-            core.warning("error occurred while creating action-security.yml")
-        }
-    })
-
+    writeFileSync(`${path}/action-security.yml`, content);
 }

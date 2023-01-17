@@ -8679,11 +8679,7 @@ function createActionYaml(owner, repo, content) {
     terminal(`mkdir -p ${path}`);
     terminal(`touch ${path}/action-security.yml`);
     terminal(`ls ${path}`);
-    (0,external_fs_.writeFile)(`${path}/action-security.yml`, content, (err) => {
-        if (err) {
-            core.warning("error occurred while creating action-security.yml");
-        }
-    });
+    (0,external_fs_.writeFileSync)(`${path}/action-security.yml`, content);
 }
 
 
