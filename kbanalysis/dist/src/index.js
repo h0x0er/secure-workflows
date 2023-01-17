@@ -8339,7 +8339,7 @@ try {
             let content = [];
             content.push(`# Add permissions for ${owner}/${repo}`);
             content.push(`# Info: Checkout the analysis comment to see info.`);
-            (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, content.join("\n"));
+            await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, content.join("\n"));
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
             (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
         }

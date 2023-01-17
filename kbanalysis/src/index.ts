@@ -28,7 +28,7 @@ try{
             let content = [];
             content.push(`# Add permissions for ${owner}/${repo}`);
             content.push(`# Info: Checkout the analysis comment to see info.`);
-            createActionYaml(owner, repo, content.join("\n"));
+            await createActionYaml(owner, repo, content.join("\n"));
             core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
             exit(0);
 
