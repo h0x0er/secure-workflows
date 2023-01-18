@@ -8332,6 +8332,7 @@ try {
         let owner = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("owner");
         let repo = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo");
         let type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getState("state");
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`State: ${type}`);
         if (type === "analysis") {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("[+] Need to perform analysis");
             (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);

@@ -21,6 +21,7 @@ try{
         let repo = core.getInput("repo");
         
         let type = core.getState("state");
+        core.info(`State: ${type}`)
         if(type==="analysis"){
             core.info("[+] Need to perform analysis")
             exit(0);
