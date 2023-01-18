@@ -29,15 +29,20 @@ try{
             let issue_id; // PR_ ID
             let title = "";
             let marker = `${owner}/${repo}`
-            let repos_result = await client.rest.pulls.list({owner: owner, repo: repo, state: "open", per_page: 100,base:"knowledge-base"}) 
-            for(let pull of repos_result.data){
-                core.info(`[+] Found: ${pull.title}`)
-                if(pull.title.indexOf(marker) > -1){
-                    issue_id = pull.id;
-                    title = pull.title;
-                    break;
+            try{
+                let repos_result = await client.rest.pulls.list({owner: owner, repo: repo, state: "open", per_page: 100, base:"knowledge-base"}) 
+                for(let pull of repos_result.data){
+                    core.info(`[+] Found: ${pull.title}`)
+                    if(pull.title.indexOf(marker) > -1){
+                        issue_id = pull.id;
+                        title = pull.title;
+                        break;
+                    }
                 }
+            }catch(err){
+                core.setFailed(err)
             }
+            
             core.info(`Title: ${title}`);
             if(!isKBIssue(title)){
                 core.info("Not performing analysis as issue is not a valid KB issue")
