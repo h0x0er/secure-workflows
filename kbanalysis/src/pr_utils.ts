@@ -20,7 +20,7 @@ export function createActionYaml(owner:string, repo:string, content:string){
     let repo_file = `action-security.yml`
     let full_path = `${path}/${repo_file}`
   
-    mkdirSync(path)
+    mkdirSync(path, {recursive: true})
 
     // terminal(`touch ${full_path}`)
     // appendFileSync(full_path, content, {})
