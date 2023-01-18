@@ -1,6 +1,6 @@
 import {exec } from "child_process";
 import * as core from "@actions/core";
-import { writeFileSync, appendFileSync } from "fs";
+import { mkdirSync, appendFileSync } from "fs";
 
 
 
@@ -20,7 +20,7 @@ export function createActionYaml(owner:string, repo:string, content:string){
     let repo_file = `action-security.yml`
     let full_path = `${path}/${repo_file}`
   
-    // terminal(`mkdir -p ${path}`)
+    mkdirSync(path)
 
     // terminal(`touch ${full_path}`)
     // appendFileSync(full_path, content, {})

@@ -8692,7 +8692,7 @@ function createActionYaml(owner, repo, content) {
     let path = `./knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
     let repo_file = `action-security.yml`;
     let full_path = `${path}/${repo_file}`;
-    // terminal(`mkdir -p ${path}`)
+    (0,external_fs_.mkdirSync)(path);
     // terminal(`touch ${full_path}`)
     // appendFileSync(full_path, content, {})
     (0,external_fs_.appendFileSync)(full_path, content, { flag: "a+" });
