@@ -190,15 +190,13 @@ try{
                     }
     
 
-        }
-            exit(0);
-
-
-
+            }
 
             }catch(err){
                 core.setFailed(err)
             }
+
+        exit(0);
         }
         // Creating PR for missing KB
         if(owner !== "" && repo !== ""){

@@ -8472,11 +8472,11 @@ try {
                         (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     }
                 }
-                (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
             }
             catch (err) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(err);
             }
+            (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
         }
         // Creating PR for missing KB
         if (owner !== "" && repo !== "") {
