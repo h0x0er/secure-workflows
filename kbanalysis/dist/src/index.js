@@ -8423,6 +8423,7 @@ try {
                         // Action is docker or composite based no need to perform token_queries
                         const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``;
                         await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                        client.rest.issues.create;
                     }
                     else {
                         // Action is Node Based
@@ -8465,11 +8466,12 @@ try {
                         }
                         body += "\n### action-security.yml\n" + action_security_yaml;
                         await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
-                        // try{
-                        //     await comment(client, repos, Number(issue_id), body)
-                        // }catch(err){
-                        //     core.info(`Error creating comment: ${err}`);
-                        // }
+                        try {
+                            await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                        }
+                        catch (err) {
+                            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Error creating comment: ${err}`);
+                        }
                         (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     }
                 }
@@ -9569,7 +9571,6 @@ function isValidLang(lang) {
 }
 async function comment(client, repos, issue_id, body) {
     await client.rest.issues.createComment(Object.assign(Object.assign({}, repos), { issue_number: Number(issue_id), body: body }));
-    await client;
 }
 function getTokenInput(action_yml, tokens_found) {
     let output = [];
@@ -9580,8 +9581,11 @@ function getTokenInput(action_yml, tokens_found) {
     }
     return output.length !== 0 ? output[0] : "env_var";
 }
-function actionSecurity(data) {
-    let template = ["```yaml"];
+function actionSecurity(data, flag = true) {
+    let template = [];
+    if (flag) {
+        template.push("```yaml");
+    }
     template.push(`${data.name}`);
     template.push("github-token:");
     template.push(`  ${data.token_input}`);
@@ -9589,7 +9593,9 @@ function actionSecurity(data) {
     for (let perm_key of Object.keys(data.perms)) {
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`);
     }
-    template.push("```\n");
+    if (flag) {
+        template.push("```");
+    }
     return template.join("\n");
 }
 function normalizePerms(perms) {

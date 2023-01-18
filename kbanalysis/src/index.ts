@@ -127,6 +127,7 @@ try{
                         // Action is docker or composite based no need to perform token_queries
                         const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``
                         await comment(client, repos, Number(issue_id), body)
+                        client.rest.issues.create
         
                     }else{
                         // Action is Node Based
@@ -183,11 +184,11 @@ try{
         
                         body += "\n### action-security.yml\n"+action_security_yaml
                         await createActionYaml(owner, repo, action_security_yaml)
-                        // try{
-                        //     await comment(client, repos, Number(issue_id), body)
-                        // }catch(err){
-                        //     core.info(`Error creating comment: ${err}`);
-                        // }
+                        try{
+                            await comment(client, repos, Number(issue_id), body)
+                        }catch(err){
+                            core.info(`Error creating comment: ${err}`);
+                        }
                         printArray(filtered_paths, "Paths Found: ")
                     }
     
@@ -198,7 +199,7 @@ try{
                 core.setFailed(err)
             }
 
-        exit(0);
+            exit(0);
         }
         // Creating PR for missing KB
         if(owner !== "" && repo !== ""){

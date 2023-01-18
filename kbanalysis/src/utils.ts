@@ -165,8 +165,6 @@ export async function comment(client, repos, issue_id, body){
         body: body
     })
 
-    await client
-
 }
 
 export function getTokenInput(action_yml:String, tokens_found:String[]){
@@ -182,9 +180,12 @@ export function getTokenInput(action_yml:String, tokens_found:String[]){
 
 }
 
-export function actionSecurity(data:{name:string, token_input:string, perms:{}}){
+export function actionSecurity(data:{name:string, token_input:string, perms:{}}, flag:boolean=true){
 
-    let template = ["```yaml"]
+    let template = []
+    if(flag){
+    template.push("```yaml")
+    }
     template.push(`${data.name}`)
     template.push("github-token:")
     template.push(`  ${data.token_input}`)
@@ -193,8 +194,9 @@ export function actionSecurity(data:{name:string, token_input:string, perms:{}})
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`)
     }
 
-    template.push("```\n")
-
+    if(flag){
+        template.push("```")
+    }
     return template.join("\n")
 
 
