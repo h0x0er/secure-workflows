@@ -20,7 +20,7 @@ try{
         let owner = core.getInput("owner");
         let repo = core.getInput("repo");
         
-        let type = core.getState("type");
+        let type = core.getState("state");
         if(type==="analysis"){
             core.info("[+] Need to perform analysis")
             exit(0);
@@ -39,17 +39,17 @@ try{
             
         
 
-            const resp2 = await client.rest.actions.createWorkflowDispatch({
-                owner: "h0x0er",
-                repo: "kb_setup",
-                workflow_id: "analysis.yml",
-                ref: "master",
-                inputs: {type: "analysis"}
-            });
+            // const resp2 = await client.rest.actions.createWorkflowDispatch({
+            //     owner: "h0x0er",
+            //     repo: "kb_setup",
+            //     workflow_id: "analysis.yml",
+            //     ref: "master",
+            //     inputs: {type: "analysis"}
+            // });
 
-            core.info(`[+] Status: ${resp2.status}`)
+            // core.info(`[+] Status: ${resp2.status}`)
 
-            exit(0);
+            // exit(0);
 
         }
     }
