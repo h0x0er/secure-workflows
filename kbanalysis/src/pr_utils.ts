@@ -16,7 +16,7 @@ function terminal(cmd:string){
 }
 
 export function createActionYaml(owner:string, repo:string, content:string){
-    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
+    let path = `./knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
     let repo_file = `action-security.yml`
     let full_path = `${path}/${repo_file}`
   

@@ -8689,7 +8689,7 @@ function terminal(cmd) {
     });
 }
 function createActionYaml(owner, repo, content) {
-    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
+    let path = `./knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
     let repo_file = `action-security.yml`;
     let full_path = `${path}/${repo_file}`;
     // terminal(`mkdir -p ${path}`)
