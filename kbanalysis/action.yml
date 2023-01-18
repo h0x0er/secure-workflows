@@ -13,7 +13,6 @@ inputs:
     description: "owner of the missing action"
   repo:
     description: "repo of the missing "
-  
   state:
     description: ""
     

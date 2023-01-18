@@ -20,7 +20,7 @@ try{
         let owner = core.getInput("owner");
         let repo = core.getInput("repo");
         
-        let type = core.getState("state");
+        let type = core.getInput("state");
         core.info(`State: ${type}`)
         if(type==="analysis"){
             core.info("[+] Need to perform analysis")

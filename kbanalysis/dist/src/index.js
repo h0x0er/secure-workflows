@@ -8331,7 +8331,7 @@ try {
     if (event === "workflow_dispatch") {
         let owner = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("owner");
         let repo = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo");
-        let type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getState("state");
+        let type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("state");
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`State: ${type}`);
         if (type === "analysis") {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("[+] Need to perform analysis");
