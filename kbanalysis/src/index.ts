@@ -183,7 +183,11 @@ try{
                         }
         
                         body += "\n### action-security.yml\n"+action_security_yaml
-                        await createActionYaml(owner, repo, action_security_yaml)
+                        try{
+                            await createActionYaml(owner, repo, action_security_yaml)
+                        }catch(err){
+                            core.info(`Unable to write action-security.yaml: ${err}`)
+                        }
                         try{
                             await comment(client, repos, Number(issue_id), body)
                         }catch(err){
