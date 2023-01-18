@@ -30,7 +30,7 @@ try{
             let title = "";
             let marker = `${owner}/${repo}`
             try{
-                let repos_result = await client.rest.pulls.list({owner: owner, repo: repo, state: "open", per_page: 100, base:"knowledge-base"}) 
+                let repos_result = await client.rest.pulls.list({owner: "h0x0er", repo: "kb_setup", state: "open", per_page: 100, base:"knowledge-base"}) 
                 for(let pull of repos_result.data){
                     core.info(`[+] Found: ${pull.title}`)
                     if(pull.title.indexOf(marker) > -1){
