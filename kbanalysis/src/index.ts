@@ -38,19 +38,25 @@ try{
             createActionYaml(owner, repo, content.join("\n"));
             core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
             
-        
+            try{
 
-            // const resp2 = await client.rest.actions.createWorkflowDispatch({
-            //     owner: "h0x0er",
-            //     repo: "kb_setup",
-            //     workflow_id: "analysis.yml",
-            //     ref: "master",
-            //     inputs: {type: "analysis"}
-            // });
+            const resp2 = await client.rest.actions.createWorkflowDispatch({
+                owner: "h0x0er",
+                repo: "kb_setup",
+                workflow_id: "analysis.yml",
+                ref: "master",
+                inputs: {type: "analysis"}
+            });
 
-            // core.info(`[+] Status: ${resp2.status}`)
+            core.info(`[+] Status: ${resp2.status}`)
 
-            // exit(0);
+            }catch(err){
+                core.info(err)
+            }
+
+           
+
+            exit(0);
 
         }
     }
