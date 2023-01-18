@@ -8668,7 +8668,7 @@ __nccwpck_require__.d(__webpack_exports__, {
 ;// CONCATENATED MODULE: external "child_process"
 const external_child_process_namespaceObject = require("child_process");
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2186);
+var lib_core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(5747);
 ;// CONCATENATED MODULE: ./src/pr_utils.ts
@@ -8676,7 +8676,7 @@ var external_fs_ = __nccwpck_require__(5747);
 
 
 function terminal(cmd) {
-    (0,external_child_process_namespaceObject.exec)(cmd, async (error, stdout, stderr) => {
+    exec(cmd, async (error, stdout, stderr) => {
         if (error) {
             core.warning(`Error occurred: ${error}`);
         }
@@ -8692,9 +8692,10 @@ function createActionYaml(owner, repo, content) {
     let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
     let repo_file = `action-security.yml`;
     let full_path = `${path}/${repo_file}`;
-    terminal(`mkdir -p ${path}`);
-    terminal(`touch ${full_path}`);
-    (0,external_fs_.writeFileSync)(full_path, content, { flag: "a" });
+    // terminal(`mkdir -p ${path}`)
+    // terminal(`touch ${full_path}`)
+    // appendFileSync(full_path, content, {})
+    (0,external_fs_.appendFileSync)(full_path, content, { flag: "a+" });
 }
 
 
