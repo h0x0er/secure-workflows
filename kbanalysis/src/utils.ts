@@ -164,6 +164,9 @@ export async function comment(client, repos, issue_id, body){
         issue_number: Number(issue_id),
         body: body
     })
+
+    await client
+
 }
 
 export function getTokenInput(action_yml:String, tokens_found:String[]){

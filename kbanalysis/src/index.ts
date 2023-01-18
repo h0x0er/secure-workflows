@@ -83,6 +83,7 @@ try{
             core.info(`Top language: ${lang}`)
             core.info(`Stars: ${repo_info.data.stargazers_count}`)
             core.info(`Private: ${repo_info.data.private}`)
+            client.rest.pulls
         
             try{
                 const action_data = await getActionYaml(client, target_owner, target_repo)
@@ -181,11 +182,12 @@ try{
                         }
         
                         body += "\n### action-security.yml\n"+action_security_yaml
-                        try{
-                            await comment(client, repos, Number(issue_id), body)
-                        }catch(err){
-                            core.info(`Error creating comment: ${err}`);
-                        }
+                        await createActionYaml(owner, repo, action_security_yaml)
+                        // try{
+                        //     await comment(client, repos, Number(issue_id), body)
+                        // }catch(err){
+                        //     core.info(`Error creating comment: ${err}`);
+                        // }
                         printArray(filtered_paths, "Paths Found: ")
                     }
     

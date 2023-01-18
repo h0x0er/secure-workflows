@@ -8385,6 +8385,7 @@ try {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Top language: ${lang}`);
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Stars: ${repo_info.data.stargazers_count}`);
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Private: ${repo_info.data.private}`);
+            client.rest.pulls;
             try {
                 const action_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getActionYaml */ .o)(client, target_owner, target_repo);
                 const readme_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getReadme */ .BQ)(client, target_owner, target_repo);
@@ -8463,12 +8464,12 @@ try {
                             body += `\n#### FollowUp Links.\n${filtered_paths.join("\n")}\n`;
                         }
                         body += "\n### action-security.yml\n" + action_security_yaml;
-                        try {
-                            await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
-                        }
-                        catch (err) {
-                            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Error creating comment: ${err}`);
-                        }
+                        await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
+                        // try{
+                        //     await comment(client, repos, Number(issue_id), body)
+                        // }catch(err){
+                        //     core.info(`Error creating comment: ${err}`);
+                        // }
                         (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     }
                 }
@@ -9568,6 +9569,7 @@ function isValidLang(lang) {
 }
 async function comment(client, repos, issue_id, body) {
     await client.rest.issues.createComment(Object.assign(Object.assign({}, repos), { issue_number: Number(issue_id), body: body }));
+    await client;
 }
 function getTokenInput(action_yml, tokens_found) {
     let output = [];
