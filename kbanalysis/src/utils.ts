@@ -1,5 +1,6 @@
 import {info} from "@actions/core"
 import { searchEndpoints } from "./endpoints"
+import { countReset } from "console"
 
 export function isKBIssue(title:String){
     const prefix = "[KB] Add GitHub token permissions for" // pattern to check, for KB issue
@@ -159,13 +160,11 @@ export function isValidLang(lang:String){
 }
 
 export async function comment(client, repos, issue_id, body){
-    let resp = await client.rest.issues.createComment({
+    await client.rest.issues.createComment({
         ...repos,
         issue_number: Number(issue_id),
         body: body
     })
-
-    if(resp.status)
 
 }
 

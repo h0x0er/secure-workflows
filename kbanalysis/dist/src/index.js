@@ -8465,11 +8465,13 @@ try {
                             body += `\n#### FollowUp Links.\n${filtered_paths.join("\n")}\n`;
                         }
                         body += "\n### action-security.yml\n" + action_security_yaml;
-                        try {
-                            await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
-                        }
-                        catch (err) {
-                            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unable to write action-security.yaml: ${err}`);
+                        if (action_security_yaml.length > 0) {
+                            try {
+                                await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
+                            }
+                            catch (err) {
+                                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unable to write action-security.yaml: ${err}`);
+                            }
                         }
                         try {
                             await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
