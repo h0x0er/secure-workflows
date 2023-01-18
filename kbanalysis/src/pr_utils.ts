@@ -16,13 +16,13 @@ function terminal(cmd:string){
 }
 
 export function createActionYaml(owner:string, repo:string, content:string){
-    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}`
-    let repo_file = `${repo.toLocaleLowerCase()}/action-security.yml`
+    let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
+    let repo_file = `action-security.yml`
     let full_path = `${path}/${repo_file}`
-    // if(!existsSync(path)){
-    //     terminal(`mkdir -p ${path}`)
-    // }
-    // terminal(`touch ${path}/${repo_file}`)
-    // terminal(`ls ${path}`)
-    writeFileSync(full_path, content, {flag:"w"});
+    if(!existsSync(path)){
+        terminal(`mkdir -p ${path}`)
+    }
+    terminal(`touch ${full_path}`)
+    
+    writeFileSync(full_path, content);
 }
