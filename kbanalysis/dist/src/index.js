@@ -8331,6 +8331,11 @@ try {
     if (event === "workflow_dispatch") {
         let owner = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("owner");
         let repo = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo");
+        let type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getState("type");
+        if (type === "analysis") {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("[+] Need to perform analysis");
+            (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
+        }
         if (owner !== "" && repo !== "") {
             if ((0,fs__WEBPACK_IMPORTED_MODULE_2__.existsSync)(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] KB already exists for ${owner}/${repo}`);
@@ -8347,8 +8352,8 @@ try {
     if (event === "schedule") {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Launched by ${event}`);
         const label = "knowledge-base";
-        const owner = "step-security";
-        const repo = "secure-workflows";
+        const owner = "h0x0er";
+        const repo = "kb_setup";
         let issues = [];
         const resp = await client.rest.issues.listForRepo({ owner: owner, repo: repo, labels: label, state: "open", per_page: 100 });
         const status = resp.status;

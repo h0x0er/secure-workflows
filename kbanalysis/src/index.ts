@@ -19,6 +19,12 @@ try{
     if(event === "workflow_dispatch"){
         let owner = core.getInput("owner");
         let repo = core.getInput("repo");
+        
+        let type = core.getState("type");
+        if(type==="analysis"){
+            core.info("[+] Need to perform analysis")
+            exit(0);
+        }
 
         if(owner !== "" && repo !== ""){
             if(existsSync(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)){
@@ -39,10 +45,11 @@ try{
         core.info(`[!] Launched by ${event}`)
         
         const label = "knowledge-base";
-        const owner = "step-security"
-        const repo = "secure-workflows"
+        const owner = "h0x0er"
+        const repo = "kb_setup"
         let issues = [];
         const resp = await client.rest.issues.listForRepo({owner:owner, repo:repo, labels: label, state: "open", per_page:100});
+
         const status = resp.status;
         if (status === 200){
             for(let issue of resp.data){
