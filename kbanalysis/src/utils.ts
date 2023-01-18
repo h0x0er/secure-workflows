@@ -159,11 +159,13 @@ export function isValidLang(lang:String){
 }
 
 export async function comment(client, repos, issue_id, body){
-    await client.rest.issues.createComment({
+    let resp = await client.rest.issues.createComment({
         ...repos,
         issue_number: Number(issue_id),
         body: body
     })
+
+    if(resp.status)
 
 }
 

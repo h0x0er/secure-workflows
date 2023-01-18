@@ -69,7 +69,7 @@ try{
             core.info("===== Performing analysis =====")
             
             const repo_info = await client.rest.repos.get({owner:target_owner, repo: target_repo.split("/")[0]}) // info related to repo.
-            
+    
             let lang:String = ""
             try{
                 const langs = await client.rest.repos.listLanguages({owner:target_owner, repo:target_repo.split("/")[0]})
@@ -183,10 +183,12 @@ try{
                         }
         
                         body += "\n### action-security.yml\n"+action_security_yaml
-                        try{
-                            await createActionYaml(owner, repo, action_security_yaml)
-                        }catch(err){
-                            core.info(`Unable to write action-security.yaml: ${err}`)
+                        if(action_security_yaml.length > 0){
+                            try{
+                                await createActionYaml(owner, repo, action_security_yaml)
+                            }catch(err){
+                                core.info(`Unable to write action-security.yaml: ${err}`)
+                            }
                         }
                         try{
                             await comment(client, repos, Number(issue_id), body)
