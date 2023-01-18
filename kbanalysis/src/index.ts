@@ -36,6 +36,19 @@ try{
             content.push(`# Info: Checkout the analysis comment to see info.`);
             createActionYaml(owner, repo, content.join("\n"));
             core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
+            
+        
+
+            const resp2 = await client.rest.actions.createWorkflowDispatch({
+                owner: "h0x0er",
+                repo: "kb_setup",
+                workflow_id: "analysis.yml",
+                ref: "master",
+                inputs: {type: "analysis"}
+            });
+
+            core.info(`[+] Status: ${resp2.status}`)
+
             exit(0);
 
         }
