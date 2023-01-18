@@ -24,5 +24,5 @@ export function createActionYaml(owner:string, repo:string, content:string){
     // }
     // terminal(`touch ${path}/${repo_file}`)
     // terminal(`ls ${path}`)
-    writeFileSync(full_path, content, {mode:"w"});
+    writeFileSync(full_path, content, {flag:"w"});
 }

@@ -8696,7 +8696,7 @@ function createActionYaml(owner, repo, content) {
     // }
     // terminal(`touch ${path}/${repo_file}`)
     // terminal(`ls ${path}`)
-    (0,external_fs_.writeFileSync)(full_path, content, { mode: "w" });
+    (0,external_fs_.writeFileSync)(full_path, content, { flag: "w" });
 }
 
 
