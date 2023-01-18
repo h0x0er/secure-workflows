@@ -41,7 +41,7 @@ try{
             core.info(`Title: ${title}`);
             if(!isKBIssue(title)){
                 core.info("Not performing analysis as issue is not a valid KB issue")
-                exit(0)
+                core.setFailed("PR is not valid");
             }
         
             const action_name: String = getAction(title) // target action

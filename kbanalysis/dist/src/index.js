@@ -8350,7 +8350,7 @@ try {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Title: ${title}`);
             if (!(0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .isKBIssue */ .yx)(title)) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is not a valid KB issue");
-                (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed("PR is not valid");
             }
             const action_name = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getAction */ .s7)(title); // target action
             const action_name_split = action_name.split("/");
