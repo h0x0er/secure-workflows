@@ -8346,6 +8346,7 @@ try {
                     break;
                 }
             }
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Title: ${title}`);
             if (!(0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .isKBIssue */ .yx)(title)) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is not a valid KB issue");
                 (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);

@@ -37,7 +37,7 @@ try{
                     break;
                 }
             }
-        
+            core.info(`Title: ${title}`);
             if(!isKBIssue(title)){
                 core.info("Not performing analysis as issue is not a valid KB issue")
                 exit(0)
