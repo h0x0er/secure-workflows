@@ -61,10 +61,10 @@ try{
 
             const action_name = `${owner}/${repo}`
 
-            if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
-                core.info("Not performing analysis as issue is already analyzed")
-                exit(0)
-            }
+            // if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
+            //     core.info("Not performing analysis as issue is already analyzed")
+            //     exit(0)
+            // }
         
             core.info("===== Performing analysis =====")
             

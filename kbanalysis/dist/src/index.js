@@ -8366,10 +8366,10 @@ try {
             // const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
             const target_repo = repo;
             const action_name = `${owner}/${repo}`;
-            if ((0,fs__WEBPACK_IMPORTED_MODULE_2__.existsSync)(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is already analyzed");
-                (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
-            }
+            // if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
+            //     core.info("Not performing analysis as issue is already analyzed")
+            //     exit(0)
+            // }
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("===== Performing analysis =====");
             const repo_info = await client.rest.repos.get({ owner: target_owner, repo: target_repo.split("/")[0] }); // info related to repo.
             let lang = "";
