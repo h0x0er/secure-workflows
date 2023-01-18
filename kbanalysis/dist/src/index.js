@@ -8463,7 +8463,12 @@ try {
                             body += `\n#### FollowUp Links.\n${filtered_paths.join("\n")}\n`;
                         }
                         body += "\n### action-security.yml\n" + action_security_yaml;
-                        await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                        try {
+                            await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                        }
+                        catch (err) {
+                            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Error creating comment: ${err}`);
+                        }
                         (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     }
                 }

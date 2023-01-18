@@ -181,9 +181,11 @@ try{
                         }
         
                         body += "\n### action-security.yml\n"+action_security_yaml
-        
-                        await comment(client, repos, Number(issue_id), body)
-                        
+                        try{
+                            await comment(client, repos, Number(issue_id), body)
+                        }catch(err){
+                            core.info(`Error creating comment: ${err}`);
+                        }
                         printArray(filtered_paths, "Paths Found: ")
                     }
     
