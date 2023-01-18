@@ -45,7 +45,7 @@ try{
                 repo: "kb_setup",
                 workflow_id: "analysis.yml",
                 ref: "master",
-                inputs: {type: "analysis"}
+                inputs: {state: "analysis"}
             });
 
             core.info(`[+] Status: ${resp2.status}`)

@@ -8353,7 +8353,7 @@ try {
                     repo: "kb_setup",
                     workflow_id: "analysis.yml",
                     ref: "master",
-                    inputs: { type: "analysis" }
+                    inputs: { state: "analysis" }
                 });
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[+] Status: ${resp2.status}`);
             }
