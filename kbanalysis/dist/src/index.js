@@ -8357,12 +8357,15 @@ try {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is not a valid KB issue");
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed("PR is not valid");
             }
-            const action_name = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getAction */ .s7)(title); // target action
-            const action_name_split = action_name.split("/");
-            const target_owner = action_name_split[0];
+            // const action_name: String = getAction(title) // target action
+            // const action_name_split = action_name.split("/") // 
+            // const target_owner = action_name_split[0] // owner
+            const target_owner = owner;
             // target_repo is the full path to action_folder
             //  i.e github.com/owner/someRepo/someActionPath
-            const target_repo = action_name_split.length > 2 ? action_name_split.slice(1).join("/") : action_name_split[1];
+            // const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
+            const target_repo = repo;
+            const action_name = `${owner}/${repo}`;
             if ((0,fs__WEBPACK_IMPORTED_MODULE_2__.existsSync)(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)) {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Not performing analysis as issue is already analyzed");
                 (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
@@ -8371,7 +8374,7 @@ try {
             const repo_info = await client.rest.repos.get({ owner: target_owner, repo: target_repo.split("/")[0] }); // info related to repo.
             let lang = "";
             try {
-                const langs = await client.rest.repos.listLanguages({ owner: target_owner, repo: target_repo });
+                const langs = await client.rest.repos.listLanguages({ owner: target_owner, repo: target_repo.split("/")[0] });
                 lang = Object.keys(langs.data)[0]; // top language used in repo
             }
             catch (err) {
@@ -8696,7 +8699,6 @@ __nccwpck_require__.d(__webpack_exports__, {
   "UI": () => (/* binding */ comment),
   "_T": () => (/* binding */ findEndpoints),
   "pS": () => (/* binding */ findToken),
-  "s7": () => (/* binding */ getAction),
   "o": () => (/* binding */ getActionYaml),
   "BQ": () => (/* binding */ getReadme),
   "xA": () => (/* binding */ getRunsON),
@@ -8708,7 +8710,7 @@ __nccwpck_require__.d(__webpack_exports__, {
   "wq": () => (/* binding */ printArray)
 });
 
-// UNUSED EXPORTS: isPaused, normalizeRepo, parseContent, readFile, validateAction
+// UNUSED EXPORTS: getAction, isPaused, normalizeRepo, parseContent, readFile, validateAction
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);

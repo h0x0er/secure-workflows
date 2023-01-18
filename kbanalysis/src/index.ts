@@ -49,14 +49,17 @@ try{
                 core.setFailed("PR is not valid");
             }
         
-            const action_name: String = getAction(title) // target action
-            const action_name_split = action_name.split("/") 
-            const target_owner = action_name_split[0]
+            // const action_name: String = getAction(title) // target action
+            // const action_name_split = action_name.split("/") // 
+            // const target_owner = action_name_split[0] // owner
+            const target_owner = owner;
         
             // target_repo is the full path to action_folder
             //  i.e github.com/owner/someRepo/someActionPath
-            const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
+            // const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
+            const target_repo = repo;
 
+            const action_name = `${owner}/${repo}`
 
             if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
                 core.info("Not performing analysis as issue is already analyzed")
@@ -69,7 +72,7 @@ try{
             
             let lang:String = ""
             try{
-                const langs = await client.rest.repos.listLanguages({owner:target_owner, repo:target_repo})
+                const langs = await client.rest.repos.listLanguages({owner:target_owner, repo:target_repo.split("/")[0]})
                 lang = Object.keys(langs.data)[0] // top language used in repo
             }catch(err){
                 lang = "NOT_FOUND"
