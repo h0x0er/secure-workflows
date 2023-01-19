@@ -54,10 +54,10 @@ try{
             const target_repo = repo;
             const action_name = `${owner}/${repo}`
 
-            // if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
-            //     core.info("Not performing analysis as issue is already analyzed")
-            //     exit(0)
-            // }
+            if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
+                core.info("[+] Not performing analysis as issue is already analyzed")
+                exit(0)
+            }
         
             core.info("===== Performing analysis:  =====")
             
@@ -112,11 +112,6 @@ try{
                     const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`
                     const action_yaml_content = `${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n`
                     await createActionYaml(target_owner, target_repo, action_yaml_content)
-                    try{
-                    await comment(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n"+template)
-                    }catch(err){
-                        core.warning(`Unable to create comment at PR-${issue_id}`);
-                    }
                 }else{
                     // we found some matches for github_token
                     matches = matches.filter((value, index, self)=>self.indexOf(value)===index) // unique matches only.
@@ -124,9 +119,7 @@ try{
                     
                     if(lang === "NOT_FOUND" || action_type === "Docker" || action_type === "Composite"){
                         // Action is docker or composite based no need to perform token_queries
-                        const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``
-                        // await comment(client, repos, Number(issue_id), body)
-                        await createActionYaml(owner, repo, "# Action is docker or composite based.\nNeed to perform manual analysis");
+                        await createActionYaml(owner, repo, "# Action is docker or composite based.\n#Need to perform manual analysis");
                         
         
                     }else{
