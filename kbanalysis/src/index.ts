@@ -23,10 +23,15 @@ try{
         let type = core.getInput("state");
         core.info(`State: ${type}`)
 
-        if(type === "analysis"){
+        if(existsSync(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)){
+            core.info(`[!] KB already exists for ${owner}/${repo}`);
+            exit(0);
+        }
+
+        // if(type === "analysis"){
 
             core.info("[+] Need to perform analysis")
-            let issue_id; // PR_ ID
+            let issue_id = -1; // PR_ ID
             let title = "";
             let marker = `${owner}/${repo}`
             try{
@@ -42,12 +47,15 @@ try{
             }catch(err){
                 core.setFailed(err)
             }
-            
-            core.info(`Title: ${title}`);
-            if(!isKBIssue(title)){
-                core.info("Not performing analysis as issue is not a valid KB issue")
-                core.setFailed("PR is not valid");
+            if(issue_id > 0){
+                core.info(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`)
+                exit(0);
             }
+            // core.info(`Title: ${title}`);
+            // if(!isKBIssue(title)){
+            //     core.info("Not performing analysis as issue is not a valid KB issue")
+            //     core.setFailed("PR is not valid");
+            // }
         
             // const action_name: String = getAction(title) // target action
             // const action_name_split = action_name.split("/") // 
@@ -127,7 +135,7 @@ try{
                         // Action is docker or composite based no need to perform token_queries
                         const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``
                         await comment(client, repos, Number(issue_id), body)
-                        client.rest.issues.create
+                        
         
                     }else{
                         // Action is Node Based
@@ -206,41 +214,37 @@ try{
             }
 
             exit(0);
-        }
+        // }
         // Creating PR for missing KB
-        if(owner !== "" && repo !== ""){
+        // if(owner !== "" && repo !== ""){
 
-            if(existsSync(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)){
-                core.info(`[!] KB already exists for ${owner}/${repo}`);
-                exit(0);
-            }
-            let content = [];
-            content.push(`# Add permissions for ${owner}/${repo}`);
-            content.push(`# Info: Checkout the analysis comment to see info.`);
-            createActionYaml(owner, repo, content.join("\n"));
-            core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
+        //     let content = [];
+        //     content.push(`# Add permissions for ${owner}/${repo}`);
+        //     content.push(`# Info: Checkout the analysis comment to see info.`);
+        //     createActionYaml(owner, repo, content.join("\n"));
+        //     core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
             
-            try{
+        //     try{
 
-            const resp2 = await client.rest.actions.createWorkflowDispatch({
-                owner: "h0x0er",
-                repo: "kb_setup",
-                workflow_id: "analysis.yml",
-                ref: "master",
-                inputs: {state: "analysis", owner: owner, repo: repo}
-            });
+        //     const resp2 = await client.rest.actions.createWorkflowDispatch({
+        //         owner: "h0x0er",
+        //         repo: "kb_setup",
+        //         workflow_id: "analysis.yml",
+        //         ref: "master",
+        //         inputs: {state: "analysis", owner: owner, repo: repo}
+        //     });
 
-            core.info(`[+] Status: ${resp2.status}`)
+        //     core.info(`[+] Status: ${resp2.status}`)
 
-            }catch(err){
-                core.info(err)
-            }
+        //     }catch(err){
+        //         core.info(err)
+        //     }
 
             
 
-            exit(0);
+        //     exit(0);
 
-        }
+        // }
     
     }
 
