@@ -8343,7 +8343,7 @@ try {
         try {
             let repos_result = await client.rest.pulls.list({ owner: "h0x0er", repo: "kb_setup", state: "open", per_page: 100, base: "knowledge-base" });
             for (let pull of repos_result.data) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[+] Found: ${pull.title}`);
+                // core.info(`[+] Found: ${pull.title}`)
                 if (pull.title.indexOf(marker) > -1) {
                     issue_id = pull.number;
                     title = pull.title;
