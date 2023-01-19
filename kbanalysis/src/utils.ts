@@ -191,9 +191,8 @@ export function actionSecurity(data:{name:string, token_input:string, perms:{}})
     template.push("  permissions:")
     for(let perm_key of Object.keys(data.perms)){
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`)
-        template.push(`    ${perm_key}-reason: to <reason here>`)
+        template.push(`    ${perm_key}-reason: to <reason_here> # specify why ${perm_key} is used.`)
     }
-
 
     return template.join("\n")
 

@@ -61,10 +61,15 @@ try{
             //     exit(0)
             // }
         
-            core.info("===== Performing analysis =====")
+            core.info("===== Performing analysis:  =====")
             
-            const repo_info = await client.rest.repos.get({owner:target_owner, repo: target_repo.split("/")[0]}) // info related to repo.
-    
+            let repo_info;
+            try{
+                repo_info = await client.rest.repos.get({owner:target_owner, repo: target_repo.split("/")[0]}) // info related to repo.
+            }catch(err){
+                core.setFailed(`Failed to fetch repo info: ${err}`);
+            }
+            
             let lang:String = ""
             try{
                 const langs = await client.rest.repos.listLanguages({owner:target_owner, repo:target_repo.split("/")[0]})
@@ -186,70 +191,7 @@ try{
             }
 
             exit(0);
-        // }
-        // Creating PR for missing KB
-        // if(owner !== "" && repo !== ""){
-
-        //     let content = [];
-        //     content.push(`# Add permissions for ${owner}/${repo}`);
-        //     content.push(`# Info: Checkout the analysis comment to see info.`);
-        //     createActionYaml(owner, repo, content.join("\n"));
-        //     core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
-            
-        //     try{
-
-        //     const resp2 = await client.rest.actions.createWorkflowDispatch({
-        //         owner: "h0x0er",
-        //         repo: "kb_setup",
-        //         workflow_id: "analysis.yml",
-        //         ref: "master",
-        //         inputs: {state: "analysis", owner: owner, repo: repo}
-        //     });
-
-        //     core.info(`[+] Status: ${resp2.status}`)
-
-        //     }catch(err){
-        //         core.info(err)
-        //     }
-
-            
-
-        //     exit(0);
-
-        // }
-    
     }
-
-    if(event === "schedule"){
-        core.info(`[!] Launched by ${event}`)
-        
-        const label = "knowledge-base";
-        const owner = "h0x0er"
-        const repo = "kb_setup"
-        let issues = [];
-        const resp = await client.rest.issues.listForRepo({owner:owner, repo:repo, labels: label, state: "open", per_page:100});
-
-        const status = resp.status;
-        if (status === 200){
-            for(let issue of resp.data){
-                issues.push({title:issue.title, number:issue.number});
-            }
-        }
-        if(issues.length > 0){
-            for(let issue of issues){
-                const t = await handleKBIssue(client, owner, repo, issue);
-            }
-            core.info(`[!] Moved ${issues.length} issues`)
-            exit(0);
-        }else{
-            core.info("No KB issues found");
-        }
-        
-        core.info(`[X] Unable to list KB issues`)
-        exit(0);
-    }
-
-
 }catch(err){
     core.setFailed(err)
 }

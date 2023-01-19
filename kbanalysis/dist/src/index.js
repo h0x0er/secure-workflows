@@ -8313,10 +8313,8 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var process__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1765);
 /* harmony import */ var process__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(process__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _issues_util__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(37);
-/* harmony import */ var _pr_utils__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(6636);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(5527);
-
+/* harmony import */ var _pr_utils__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6636);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(5527);
 
 
 
@@ -8367,8 +8365,14 @@ try {
         //     core.info("Not performing analysis as issue is already analyzed")
         //     exit(0)
         // }
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("===== Performing analysis =====");
-        const repo_info = await client.rest.repos.get({ owner: target_owner, repo: target_repo.split("/")[0] }); // info related to repo.
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("===== Performing analysis:  =====");
+        let repo_info;
+        try {
+            repo_info = await client.rest.repos.get({ owner: target_owner, repo: target_repo.split("/")[0] }); // info related to repo.
+        }
+        catch (err) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to fetch repo info: ${err}`);
+        }
         let lang = "";
         try {
             const langs = await client.rest.repos.listLanguages({ owner: target_owner, repo: target_repo.split("/")[0] });
@@ -8383,19 +8387,19 @@ try {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Stars: ${repo_info.data.stargazers_count}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Private: ${repo_info.data.private}`);
         try {
-            const action_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getActionYaml */ .o)(client, target_owner, target_repo);
-            const readme_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getReadme */ .BQ)(client, target_owner, target_repo);
+            const action_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .getActionYaml */ .o)(client, target_owner, target_repo);
+            const readme_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .getReadme */ .BQ)(client, target_owner, target_repo);
             const start = action_data.indexOf("name:");
             const action_yaml_name = action_data.substring(start, start + action_data.substring(start).indexOf("\n"));
-            const action_type = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getRunsON */ .xA)(action_data);
+            const action_type = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .getRunsON */ .xA)(action_data);
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Action Type: ${action_type}`);
             // determining if token is being set by default
             const pattern = /\${{.*github\.token.*}}/; // default github_token pattern
             const is_default_token = action_data.match(pattern) !== null;
             let matches = []; // // list holding all matches.
-            const action_matches = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .findToken */ .pS)(action_data);
+            const action_matches = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .findToken */ .pS)(action_data);
             if (readme_data !== null) {
-                const readme_matches = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .findToken */ .pS)(readme_data);
+                const readme_matches = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .findToken */ .pS)(readme_data);
                 if (readme_matches !== null) {
                     matches.push(...readme_matches); // pushing readme_matches in main matches.
                 }
@@ -8408,8 +8412,8 @@ try {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning("Action doesn't contains reference to github_token");
                 const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`;
                 const action_yaml_content = `${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n`;
-                await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(target_owner, target_repo, action_yaml_content);
-                await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n" + template);
+                await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(target_owner, target_repo, action_yaml_content);
+                await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .comment */ .UI)(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n" + template);
             }
             else {
                 // we found some matches for github_token
@@ -8418,15 +8422,15 @@ try {
                 if (lang === "NOT_FOUND" || action_type === "Docker" || action_type === "Composite") {
                     // Action is docker or composite based no need to perform token_queries
                     const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``;
-                    await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
-                    await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, "# Action is docker or composite based.\nNeed to perform manual analysis");
+                    await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                    await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(owner, repo, "# Action is docker or composite based.\nNeed to perform manual analysis");
                 }
                 else {
                     let action_security_yaml = ""; // content of action-yaml file
                     // Action is Node Based
                     let is_used_github_api = false;
-                    if ((0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .isValidLang */ .hy)(lang)) {
-                        is_used_github_api = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .checkDependencies */ .ft)(client, target_owner, target_repo);
+                    if ((0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .isValidLang */ .hy)(lang)) {
+                        is_used_github_api = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .checkDependencies */ .ft)(client, target_owner, target_repo);
                     }
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Github API used: ${is_used_github_api}`);
                     let paths_found = []; // contains url to files
@@ -8442,21 +8446,21 @@ try {
                     const filtered_paths = paths_found.filter((value, index, self) => self.indexOf(value) === index);
                     src_files = src_files.filter((value, index, self) => self.indexOf(value) === index); // filtering src files.
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Src File found: ${src_files}`);
-                    const valid_input = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getTokenInput */ .Ih)(action_data, matches);
+                    const valid_input = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .getTokenInput */ .Ih)(action_data, matches);
                     let token_input = valid_input !== "env_var" ? `action-input:\n    input: ${valid_input}\n    is-default: ${is_default_token}` : `environment-variable-name: <FigureOutYourself>`;
                     if (is_used_github_api) {
                         if (src_files.length !== 0) {
-                            const perms = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .findEndpoints */ ._T)(client, target_owner, target_repo, src_files);
+                            const perms = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .findEndpoints */ ._T)(client, target_owner, target_repo, src_files);
                             if (perms !== {}) {
-                                let str_perms = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .permsToString */ .W5)(perms);
+                                let str_perms = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .permsToString */ .W5)(perms);
                                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${str_perms}`);
-                                action_security_yaml += (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .actionSecurity */ .LU)({ name: action_yaml_name, token_input: token_input, perms: (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .normalizePerms */ .So)(perms) });
+                                action_security_yaml += (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .actionSecurity */ .LU)({ name: action_yaml_name, token_input: token_input, perms: (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .normalizePerms */ .So)(perms) });
                             }
                         }
                     }
-                    (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
+                    (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     try {
-                        await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
+                        await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
                     }
                     catch (err) {
                         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unable to write action-security.yaml: ${err}`);
@@ -8468,54 +8472,6 @@ try {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(err);
         }
         (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
-        // }
-        // Creating PR for missing KB
-        // if(owner !== "" && repo !== ""){
-        //     let content = [];
-        //     content.push(`# Add permissions for ${owner}/${repo}`);
-        //     content.push(`# Info: Checkout the analysis comment to see info.`);
-        //     createActionYaml(owner, repo, content.join("\n"));
-        //     core.info(`[+] Created action-security.yaml for ${owner}/${repo}`);
-        //     try{
-        //     const resp2 = await client.rest.actions.createWorkflowDispatch({
-        //         owner: "h0x0er",
-        //         repo: "kb_setup",
-        //         workflow_id: "analysis.yml",
-        //         ref: "master",
-        //         inputs: {state: "analysis", owner: owner, repo: repo}
-        //     });
-        //     core.info(`[+] Status: ${resp2.status}`)
-        //     }catch(err){
-        //         core.info(err)
-        //     }
-        //     exit(0);
-        // }
-    }
-    if (event === "schedule") {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Launched by ${event}`);
-        const label = "knowledge-base";
-        const owner = "h0x0er";
-        const repo = "kb_setup";
-        let issues = [];
-        const resp = await client.rest.issues.listForRepo({ owner: owner, repo: repo, labels: label, state: "open", per_page: 100 });
-        const status = resp.status;
-        if (status === 200) {
-            for (let issue of resp.data) {
-                issues.push({ title: issue.title, number: issue.number });
-            }
-        }
-        if (issues.length > 0) {
-            for (let issue of issues) {
-                const t = await (0,_issues_util__WEBPACK_IMPORTED_MODULE_4__/* .handleKBIssue */ .A)(client, owner, repo, issue);
-            }
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Moved ${issues.length} issues`);
-            (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
-        }
-        else {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("No KB issues found");
-        }
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[X] Unable to list KB issues`);
-        (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
     }
 }
 catch (err) {
@@ -8524,112 +8480,6 @@ catch (err) {
 
 __webpack_handle_async_dependencies__();
 }, 1);
-
-/***/ }),
-
-/***/ 37:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "A": () => (/* binding */ handleKBIssue)
-/* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-
-async function handleKBIssue(octokit, owner, repo, issue) {
-    const storage_issue = 1380;
-    const comment_id = 1308209074;
-    let comment = await prepareComment(octokit, owner, repo, issue);
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Moving ${issue.title}`);
-    let resp = await octokit.rest.issues.getComment({
-        owner: owner,
-        repo: repo,
-        comment_id: comment_id,
-    });
-    if (resp.status == 200) {
-        let old_body = resp.data.body;
-        let action_name = getAction(issue.title);
-        if (old_body.indexOf(action_name) >= 0) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Action ${action_name} is already being tracked`);
-            let ret = await closeIssue(octokit, owner, repo, issue);
-            return ret;
-        }
-        let new_body = old_body + comment;
-        let resp2 = await octokit.rest.issues.updateComment({
-            owner: owner,
-            repo: repo,
-            comment_id: comment_id,
-            body: new_body,
-        });
-        if (resp2.status !== 200) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[X] Unable to add: ${issue.number} in the tracking comment`);
-        }
-        else {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Added ${issue.title} in tracking comment.`);
-            let ret = await closeIssue(octokit, owner, repo, issue);
-            return ret;
-        }
-    }
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[X] Unable to handle: ${issue.title} `);
-    return "error: unable to get comment";
-}
-function createIssueCommentBody(data) {
-    let output = [];
-    output.push(`\n- [ ] ${data.title.substring(5)}`);
-    let new_body = data.body.split("\n");
-    output.push("  <details>");
-    output.push("  <summary>Analysis</summary>\n");
-    for (let line of new_body) {
-        output.push(`  ${line}`);
-    }
-    output.push("  </details>");
-    return output.join("\n");
-}
-async function prepareComment(client, owner, repo, issue) {
-    let resp = await client.rest.issues.listComments({
-        owner: owner,
-        repo: repo,
-        issue_number: issue.number,
-    });
-    if (resp.status === 200) {
-        if (resp.data.length > 0) {
-            let body = resp.data[0].body;
-            return createIssueCommentBody({ title: issue.title, body: body });
-        }
-        else {
-            return createIssueCommentBody({
-                title: issue.title,
-                body: "no analysis found",
-            });
-        }
-    }
-    return createIssueCommentBody({
-        title: issue.title,
-        body: "unable to fetch analysis",
-    });
-}
-function getAction(x) {
-    x = x.split(" ");
-    return x[6];
-}
-async function closeIssue(octokit, owner, repo, issue) {
-    let resp3 = await octokit.rest.issues.update({
-        owner: owner,
-        repo: repo,
-        issue_number: issue.number,
-        state: "closed",
-    });
-    if (resp3.status === 200) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] Closed Issue ${issue.number}`);
-        return "success";
-    }
-    else {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[X] Unable to close issue ${issue.number}`);
-        return "error: unable to close issue";
-    }
-}
-
 
 /***/ }),
 
@@ -9572,7 +9422,7 @@ function actionSecurity(data) {
     template.push("  permissions:");
     for (let perm_key of Object.keys(data.perms)) {
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`);
-        template.push(`    ${perm_key}-reason: to <reason here>`);
+        template.push(`    ${perm_key}-reason: to <reason_here> # specify why ${perm_key} is used.`);
     }
     return template.join("\n");
 }
