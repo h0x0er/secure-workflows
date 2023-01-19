@@ -125,7 +125,7 @@ try{
                     if(lang === "NOT_FOUND" || action_type === "Docker" || action_type === "Composite"){
                         // Action is docker or composite based no need to perform token_queries
                         const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``
-                        await comment(client, repos, Number(issue_id), body)
+                        // await comment(client, repos, Number(issue_id), body)
                         await createActionYaml(owner, repo, "# Action is docker or composite based.\nNeed to perform manual analysis");
                         
         
