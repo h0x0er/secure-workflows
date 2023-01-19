@@ -39,7 +39,6 @@ try{
                     // core.info(`[+] Found: ${pull.title}`)
                     if(pull.title.indexOf(marker) > -1){
                         issue_id = pull.number;
-                        title = pull.title;
                         break;
                     }
                 }

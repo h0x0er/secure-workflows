@@ -8338,7 +8338,6 @@ try {
         // if(type === "analysis"){
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("[+] Need to perform analysis");
         let issue_id = -1; // PR_ ID
-        let title = "";
         let marker = `${owner}/${repo}`;
         try {
             let repos_result = await client.rest.pulls.list({ owner: "h0x0er", repo: "kb_setup", state: "open", per_page: 100, base: "knowledge-base" });
@@ -8346,7 +8345,6 @@ try {
                 // core.info(`[+] Found: ${pull.title}`)
                 if (pull.title.indexOf(marker) > -1) {
                     issue_id = pull.number;
-                    title = pull.title;
                     break;
                 }
             }
@@ -8381,7 +8379,6 @@ try {
         catch (err) {
             lang = "NOT_FOUND";
         }
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Issue Title: ${title}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Action: ${action_name}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Top language: ${lang}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Stars: ${repo_info.data.stargazers_count}`);
