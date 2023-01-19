@@ -8419,6 +8419,7 @@ try {
                     // Action is docker or composite based no need to perform token_queries
                     const body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``;
                     await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
+                    await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, "# Action is docker or composite based.\nNeed to perform manual analysis");
                 }
                 else {
                     let action_security_yaml = ""; // content of action-yaml file
