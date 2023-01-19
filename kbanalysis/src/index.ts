@@ -51,22 +51,9 @@ try{
                 core.info(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`)
                 exit(0);
             }
-            // core.info(`Title: ${title}`);
-            // if(!isKBIssue(title)){
-            //     core.info("Not performing analysis as issue is not a valid KB issue")
-            //     core.setFailed("PR is not valid");
-            // }
-        
-            // const action_name: String = getAction(title) // target action
-            // const action_name_split = action_name.split("/") // 
-            // const target_owner = action_name_split[0] // owner
-            const target_owner = owner;
-        
-            // target_repo is the full path to action_folder
-            //  i.e github.com/owner/someRepo/someActionPath
-            // const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
-            const target_repo = repo;
 
+            const target_owner = owner;
+            const target_repo = repo;
             const action_name = `${owner}/${repo}`
 
             // if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
@@ -91,7 +78,6 @@ try{
             core.info(`Top language: ${lang}`)
             core.info(`Stars: ${repo_info.data.stargazers_count}`)
             core.info(`Private: ${repo_info.data.private}`)
-            client.rest.pulls
         
             try{
                 const action_data = await getActionYaml(client, target_owner, target_repo)
@@ -138,6 +124,9 @@ try{
                         
         
                     }else{
+
+                        let action_security_yaml = "" // content of action-yaml file
+
                         // Action is Node Based
                         let is_used_github_api = false 
                         if(isValidLang(lang)){
@@ -161,20 +150,15 @@ try{
                         const filtered_paths = paths_found.filter((value, index, self)=>self.indexOf(value)===index)
                         src_files = src_files.filter((value, index, self)=>self.indexOf(value)===index) // filtering src files.
                         core.info(`Src File found: ${src_files}`)
-                        let body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nTop language: ${lang}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``
-                        
-        
-                        let action_security_yaml = ""
+
                         const valid_input = getTokenInput(action_data, matches)
                         let token_input = valid_input !== "env_var" ? `action-input:\n    input: ${valid_input}\n    is-default: ${is_default_token}` : `environment-variable-name: <FigureOutYourself>`
         
                         if(is_used_github_api){
                             if(src_files.length !== 0){
-                                body += "\n### Endpoints Found\n"
                                 const perms = await findEndpoints(client, target_owner, target_repo, src_files)
                                 if(perms !== {}){
                                     let str_perms = permsToString(perms)
-                                    body += str_perms
                                     core.info(`${str_perms}`)
                                     action_security_yaml += actionSecurity({name:action_yaml_name, token_input: token_input, perms:normalizePerms(perms)})
         
@@ -184,26 +168,13 @@ try{
                             }
                             
                         }
-        
-                        if(filtered_paths.length !== 0){
-                            body += `\n#### FollowUp Links.\n${filtered_paths.join("\n")}\n`
-        
-                        }
-        
-                        body += "\n### action-security.yml\n"+action_security_yaml
-                      
+                        printArray(filtered_paths, "Paths Found: ")
                         try{
                             await createActionYaml(owner, repo, action_security_yaml)
                         }catch(err){
                             core.info(`Unable to write action-security.yaml: ${err}`)
                         }
                         
-                        try{
-                            await comment(client, repos, Number(issue_id), body)
-                        }catch(err){
-                            core.info(`Error creating comment: ${err}`);
-                        }
-                        printArray(filtered_paths, "Paths Found: ")
                     }
     
 

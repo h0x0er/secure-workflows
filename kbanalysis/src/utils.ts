@@ -181,23 +181,20 @@ export function getTokenInput(action_yml:String, tokens_found:String[]){
 
 }
 
-export function actionSecurity(data:{name:string, token_input:string, perms:{}}, flag:boolean=true){
+export function actionSecurity(data:{name:string, token_input:string, perms:{}}){
 
     let template = []
-    if(flag){
-    template.push("```yaml")
-    }
+
     template.push(`${data.name}`)
     template.push("github-token:")
     template.push(`  ${data.token_input}`)
     template.push("  permissions:")
     for(let perm_key of Object.keys(data.perms)){
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`)
+        template.push(`    ${perm_key}-reason: to <reason here>`)
     }
 
-    if(flag){
-        template.push("```")
-    }
+
     return template.join("\n")
 
 

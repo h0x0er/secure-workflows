@@ -8360,18 +8360,7 @@ try {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`);
             (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
         }
-        // core.info(`Title: ${title}`);
-        // if(!isKBIssue(title)){
-        //     core.info("Not performing analysis as issue is not a valid KB issue")
-        //     core.setFailed("PR is not valid");
-        // }
-        // const action_name: String = getAction(title) // target action
-        // const action_name_split = action_name.split("/") // 
-        // const target_owner = action_name_split[0] // owner
         const target_owner = owner;
-        // target_repo is the full path to action_folder
-        //  i.e github.com/owner/someRepo/someActionPath
-        // const target_repo = action_name_split.length > 2 ? action_name_split.slice(1,).join("/") : action_name_split[1]
         const target_repo = repo;
         const action_name = `${owner}/${repo}`;
         // if(existsSync(`knowledge-base/actions/${target_owner.toLocaleLowerCase()}/${target_repo.toLocaleLowerCase()}/action-security.yml`)){
@@ -8393,7 +8382,6 @@ try {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Top language: ${lang}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Stars: ${repo_info.data.stargazers_count}`);
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Private: ${repo_info.data.private}`);
-        client.rest.pulls;
         try {
             const action_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getActionYaml */ .o)(client, target_owner, target_repo);
             const readme_data = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getReadme */ .BQ)(client, target_owner, target_repo);
@@ -8433,6 +8421,7 @@ try {
                     await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
                 }
                 else {
+                    let action_security_yaml = ""; // content of action-yaml file
                     // Action is Node Based
                     let is_used_github_api = false;
                     if ((0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .isValidLang */ .hy)(lang)) {
@@ -8452,39 +8441,25 @@ try {
                     const filtered_paths = paths_found.filter((value, index, self) => self.indexOf(value) === index);
                     src_files = src_files.filter((value, index, self) => self.indexOf(value) === index); // filtering src files.
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Src File found: ${src_files}`);
-                    let body = `### Analysis\n\`\`\`yml\nAction Name: ${action_name}\nAction Type: ${action_type}\nGITHUB_TOKEN Matches: ${matches}\nTop language: ${lang}\nStars: ${repo_info.data.stargazers_count}\nPrivate: ${repo_info.data.private}\nForks: ${repo_info.data.forks_count}\n\`\`\``;
-                    let action_security_yaml = "";
                     const valid_input = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .getTokenInput */ .Ih)(action_data, matches);
                     let token_input = valid_input !== "env_var" ? `action-input:\n    input: ${valid_input}\n    is-default: ${is_default_token}` : `environment-variable-name: <FigureOutYourself>`;
                     if (is_used_github_api) {
                         if (src_files.length !== 0) {
-                            body += "\n### Endpoints Found\n";
                             const perms = await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .findEndpoints */ ._T)(client, target_owner, target_repo, src_files);
                             if (perms !== {}) {
                                 let str_perms = (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .permsToString */ .W5)(perms);
-                                body += str_perms;
                                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${str_perms}`);
                                 action_security_yaml += (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .actionSecurity */ .LU)({ name: action_yaml_name, token_input: token_input, perms: (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .normalizePerms */ .So)(perms) });
                             }
                         }
                     }
-                    if (filtered_paths.length !== 0) {
-                        body += `\n#### FollowUp Links.\n${filtered_paths.join("\n")}\n`;
-                    }
-                    body += "\n### action-security.yml\n" + action_security_yaml;
+                    (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     try {
                         await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_5__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
                     }
                     catch (err) {
                         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unable to write action-security.yaml: ${err}`);
                     }
-                    try {
-                        await (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .comment */ .UI)(client, repos, Number(issue_id), body);
-                    }
-                    catch (err) {
-                        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Error creating comment: ${err}`);
-                    }
-                    (0,_utils__WEBPACK_IMPORTED_MODULE_6__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                 }
             }
         }
@@ -9588,20 +9563,15 @@ function getTokenInput(action_yml, tokens_found) {
     }
     return output.length !== 0 ? output[0] : "env_var";
 }
-function actionSecurity(data, flag = true) {
+function actionSecurity(data) {
     let template = [];
-    if (flag) {
-        template.push("```yaml");
-    }
     template.push(`${data.name}`);
     template.push("github-token:");
     template.push(`  ${data.token_input}`);
     template.push("  permissions:");
     for (let perm_key of Object.keys(data.perms)) {
         template.push(`    ${perm_key}: ${data.perms[perm_key]}`);
-    }
-    if (flag) {
-        template.push("```");
+        template.push(`    ${perm_key}-reason: to <reason here>`);
     }
     return template.join("\n");
 }
