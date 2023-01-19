@@ -8313,7 +8313,7 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var process__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1765);
 /* harmony import */ var process__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(process__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _pr_utils__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6636);
+/* harmony import */ var _pr_utils__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(1729);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(5527);
 
 
@@ -8332,7 +8332,8 @@ try {
         let type = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("state");
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`State: ${type}`);
         if ((0,fs__WEBPACK_IMPORTED_MODULE_2__.existsSync)(`knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`)) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] KB already exists for ${owner}/${repo}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[!] KB already ebuild
+            ￼# GITHUB_TOKEN not uxists for ${owner}/${repo}`);
             (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
         }
         // if(type === "analysis"){
@@ -8340,7 +8341,13 @@ try {
         let issue_id = -1; // PR_ ID
         let marker = `${owner}/${repo}`;
         try {
-            let repos_result = await client.rest.pulls.list({ owner: "h0x0er", repo: "kb_setup", state: "open", per_page: 100, base: "knowledge-base" });
+            let repos_result = await client.rest.pulls.list({
+                owner: "h0x0er",
+                repo: "kb_setup",
+                state: "open",
+                per_page: 100,
+                base: "knowledge-base",
+            });
             for (let pull of repos_result.data) {
                 // core.info(`[+] Found: ${pull.title}`)
                 if (pull.title.indexOf(marker) > -1) {
@@ -8366,14 +8373,20 @@ try {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("===== Performing analysis:  =====");
         let repo_info;
         try {
-            repo_info = await client.rest.repos.get({ owner: target_owner, repo: target_repo.split("/")[0] }); // info related to repo.
+            repo_info = await client.rest.repos.get({
+                owner: target_owner,
+                repo: target_repo.split("/")[0],
+            }); // info related to repo.
         }
         catch (err) {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`Failed to fetch repo info: ${err}`);
         }
         let lang = "";
         try {
-            const langs = await client.rest.repos.listLanguages({ owner: target_owner, repo: target_repo.split("/")[0] });
+            const langs = await client.rest.repos.listLanguages({
+                owner: target_owner,
+                repo: target_repo.split("/")[0],
+            });
             lang = Object.keys(langs.data)[0]; // top language used in repo
         }
         catch (err) {
@@ -8405,7 +8418,7 @@ try {
                 matches.push(...action_matches);
             }
             if (matches.length === 0) {
-                // no github_token pattern found in action_file & readme file 
+                // no github_token pattern found in action_file & readme file
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning("Action doesn't contains reference to github_token");
                 const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`;
                 const action_yaml_content = `${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n`;
@@ -8415,7 +8428,9 @@ try {
                 // we found some matches for github_token
                 matches = matches.filter((value, index, self) => self.indexOf(value) === index); // unique matches only.
                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Pattern Matches: " + matches.join(","));
-                if (lang === "NOT_FOUND" || action_type === "Docker" || action_type === "Composite") {
+                if (lang === "NOT_FOUND" ||
+                    action_type === "Docker" ||
+                    action_type === "Composite") {
                     // Action is docker or composite based no need to perform token_queries
                     await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(owner, repo, "# Action is docker or composite based.\n#Need to perform manual analysis");
                 }
@@ -8432,8 +8447,8 @@ try {
                     for (let match of matches) {
                         const query = `${match}+in:file+repo:${target_owner}/${target_repo}+language:${lang}`;
                         const res = await client.rest.search.code({ q: query });
-                        const items = res.data.items.map(item => item.html_url);
-                        const src = res.data.items.map(item => item.path);
+                        const items = res.data.items.map((item) => item.html_url);
+                        const src = res.data.items.map((item) => item.path);
                         paths_found.push(...items);
                         src_files.push(...src);
                     }
@@ -8441,14 +8456,20 @@ try {
                     src_files = src_files.filter((value, index, self) => self.indexOf(value) === index); // filtering src files.
                     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Src File found: ${src_files}`);
                     const valid_input = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .getTokenInput */ .Ih)(action_data, matches);
-                    let token_input = valid_input !== "env_var" ? `action-input:\n    input: ${valid_input}\n    is-default: ${is_default_token}` : `environment-variable-name: <FigureOutYourself>`;
+                    let token_input = valid_input !== "env_var"
+                        ? `action-input:\n    input: ${valid_input}\n    is-default: ${is_default_token}`
+                        : `environment-variable-name: <FigureOutYourself>`;
                     if (is_used_github_api) {
                         if (src_files.length !== 0) {
                             const perms = await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .findEndpoints */ ._T)(client, target_owner, target_repo, src_files);
                             if (perms !== {}) {
                                 let str_perms = (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .permsToString */ .W5)(perms);
                                 _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`${str_perms}`);
-                                action_security_yaml += (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .actionSecurity */ .LU)({ name: action_yaml_name, token_input: token_input, perms: (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .normalizePerms */ .So)(perms) });
+                                action_security_yaml += (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .actionSecurity */ .LU)({
+                                    name: action_yaml_name,
+                                    token_input: token_input,
+                                    perms: (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .normalizePerms */ .So)(perms),
+                                });
                             }
                         }
                     }
@@ -8477,47 +8498,22 @@ __webpack_handle_async_dependencies__();
 
 /***/ }),
 
-/***/ 6636:
+/***/ 1729:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "j": () => (/* binding */ createActionYaml)
+/* harmony export */ });
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5747);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
 
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "j": () => (/* binding */ createActionYaml)
-});
-
-;// CONCATENATED MODULE: external "child_process"
-const external_child_process_namespaceObject = require("child_process");
-// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var lib_core = __nccwpck_require__(2186);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(5747);
-;// CONCATENATED MODULE: ./src/pr_utils.ts
-
-
-
-function terminal(cmd) {
-    exec(cmd, async (error, stdout, stderr) => {
-        if (error) {
-            core.warning(`Error occurred: ${error}`);
-        }
-        if (stderr) {
-            core.warning(`Error occurred: ${stderr}`);
-        }
-        if (stdout) {
-            core.info(`Output: ${stdout}`);
-        }
-    });
-}
 function createActionYaml(owner, repo, content) {
     let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`;
     let repo_file = `action-security.yml`;
     let full_path = `${path}/${repo_file}`;
-    (0,external_fs_.mkdirSync)(path, { recursive: true });
-    // terminal(`touch ${full_path}`)
-    // appendFileSync(full_path, content, {})
-    (0,external_fs_.appendFileSync)(full_path, content, { flag: "a+" });
+    (0,fs__WEBPACK_IMPORTED_MODULE_0__.mkdirSync)(path, { recursive: true });
+    (0,fs__WEBPACK_IMPORTED_MODULE_0__.appendFileSync)(full_path, content, { flag: "a+" });
 }
 
 

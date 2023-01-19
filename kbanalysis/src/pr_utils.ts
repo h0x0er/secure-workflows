@@ -1,19 +1,5 @@
-import {exec } from "child_process";
-import * as core from "@actions/core";
 import { mkdirSync, appendFileSync } from "fs";
 
-
-
-function terminal(cmd:string){
-    exec(cmd, async (error, stdout, stderr)=>{
-
-        if(error){core.warning(`Error occurred: ${error}`)}
-        if(stderr){core.warning(`Error occurred: ${stderr}`)}
-        if(stdout){core.info(`Output: ${stdout}`)}
-
-
-    })  
-}
 
 export function createActionYaml(owner:string, repo:string, content:string){
     let path = `knowledge-base/actions/${owner.toLocaleLowerCase()}/${repo.toLocaleLowerCase()}`
@@ -21,8 +7,5 @@ export function createActionYaml(owner:string, repo:string, content:string){
     let full_path = `${path}/${repo_file}`
   
     mkdirSync(path, {recursive: true})
-
-    // terminal(`touch ${full_path}`)
-    // appendFileSync(full_path, content, {})
     appendFileSync(full_path, content, {flag:"a+"});
 }
