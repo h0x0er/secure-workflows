@@ -112,8 +112,11 @@ try{
                     const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`
                     const action_yaml_content = `${action_yaml_name} # ${target_owner+"/"+target_repo}\n# GITHUB_TOKEN not used\n`
                     await createActionYaml(target_owner, target_repo, action_yaml_content)
-        
+                    try{
                     await comment(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n"+template)
+                    }catch(err){
+                        core.warning(`Unable to create comment at PR-${issue_id}`);
+                    }
                 }else{
                     // we found some matches for github_token
                     matches = matches.filter((value, index, self)=>self.indexOf(value)===index) // unique matches only.

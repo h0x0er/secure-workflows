@@ -8410,7 +8410,12 @@ try {
                 const template = `\n\`\`\`yaml\n${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n\`\`\`\n`;
                 const action_yaml_content = `${action_yaml_name} # ${target_owner + "/" + target_repo}\n# GITHUB_TOKEN not used\n`;
                 await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(target_owner, target_repo, action_yaml_content);
-                await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .comment */ .UI)(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n" + template);
+                try {
+                    await (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .comment */ .UI)(client, repos, Number(issue_id), "This action's `action.yml` & `README.md` doesn't contains any reference to GITHUB_TOKEN\n### action-security.yml\n" + template);
+                }
+                catch (err) {
+                    _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`Unable to create comment at PR-${issue_id}`);
+                }
             }
             else {
                 // we found some matches for github_token
