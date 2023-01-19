@@ -8475,6 +8475,9 @@ try {
                     }
                     (0,_utils__WEBPACK_IMPORTED_MODULE_5__/* .printArray */ .wq)(filtered_paths, "Paths Found: ");
                     try {
+                        if (action_security_yaml.length === 0) {
+                            action_security_yaml += "# Error in determining permissions";
+                        }
                         await (0,_pr_utils__WEBPACK_IMPORTED_MODULE_4__/* .createActionYaml */ .j)(owner, repo, action_security_yaml);
                     }
                     catch (err) {

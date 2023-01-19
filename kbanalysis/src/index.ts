@@ -235,6 +235,9 @@ try {
           }
           printArray(filtered_paths, "Paths Found: ");
           try {
+            if(action_security_yaml.length === 0){
+                action_security_yaml += "# Error in determining permissions"
+            }
             await createActionYaml(owner, repo, action_security_yaml);
           } catch (err) {
             core.info(`Unable to write action-security.yaml: ${err}`);
