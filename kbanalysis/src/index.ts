@@ -32,7 +32,6 @@ try{
 
             core.info("[+] Need to perform analysis")
             let issue_id = -1; // PR_ ID
-            let title = "";
             let marker = `${owner}/${repo}`
             try{
                 let repos_result = await client.rest.pulls.list({owner: "h0x0er", repo: "kb_setup", state: "open", per_page: 100, base:"knowledge-base"}) 
@@ -78,7 +77,6 @@ try{
                 lang = "NOT_FOUND"
             }
             
-            core.info(`Issue Title: ${title}`)
             core.info(`Action: ${action_name}`) 
             core.info(`Top language: ${lang}`)
             core.info(`Stars: ${repo_info.data.stargazers_count}`)
