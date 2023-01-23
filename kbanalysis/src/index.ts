@@ -62,7 +62,6 @@ try {
       core.setFailed(
         `[+] PR-${issue_id} already exists for the action ${owner}/${repo}`
       );
-      exit(0);
     }
 
     const target_owner = owner;
