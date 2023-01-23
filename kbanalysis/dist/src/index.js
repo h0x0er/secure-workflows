@@ -8356,6 +8356,7 @@ try {
         }
         if (issue_id > 0) {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`);
+            (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(1);
         }
         const target_owner = owner;
         const target_repo = repo;
