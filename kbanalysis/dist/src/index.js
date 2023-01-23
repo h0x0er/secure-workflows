@@ -8355,7 +8355,7 @@ try {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(err);
         }
         if (issue_id > 0) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(`[+] PR-${issue_id} already exists for the action ${owner}/${repo}`);
             (0,process__WEBPACK_IMPORTED_MODULE_3__.exit)(0);
         }
         const target_owner = owner;
