@@ -11,6 +11,7 @@ require (
 require (
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/shopspring/decimal v1.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -18,7 +19,7 @@ require (
 )
 
 require (
-	github.com/PaesslerAG/gval v1.1.2
+	github.com/PaesslerAG/gval v1.2.2
 	github.com/generikvault/gvalstrings v0.0.0-20180926130504-471f38f0112a
 	github.com/google/go-github/v40 v40.0.0
 	github.com/jarcoal/httpmock v1.0.8
